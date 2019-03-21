@@ -5,7 +5,7 @@
       <div class="caption">
         <h3 style="overflow: hidden;height: 79px;">{{item.title}}</h3>
         <p>
-          <router-link :to="`/posts/${item.id}`" class="btn btn-link" role="button" style="padding: 10px 0;font-size: 20px;">More...</router-link>
+          <router-link :to="`/posts/${item.id}`" class="btn btn-link" style="padding: 10px 0;font-size: 20px;">More...</router-link>
         </p>
       </div>
     </div>
