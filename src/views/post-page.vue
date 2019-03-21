@@ -22,30 +22,25 @@ import axios from 'axios'
         window.history.length > 1
           ? this.$router.go(-1)
           : this.$router.push('/')
-      }
-    },
-
-     created(){
-      axios.get(`https://gorest.co.in/public-api/posts?_format=json&access-token=Y1A3q9Ee-dMhjxzsdco7qrr-W-6VPp4bpidT&id=${this.$route.params.id}`)
+      },
+      loadPost(id){
+        axios.get(`https://gorest.co.in/public-api/posts?_format=json&access-token=Y1A3q9Ee-dMhjxzsdco7qrr-W-6VPp4bpidT&id=${id}`)
       .then(response =>
             {              
               if(response.data){      
                 this.post=response.data.result[0]               
               } 
             }
-      );
+      )
+      }
+    },
+
+     created(){
+      this.loadPost(this.$route.params.id)
     },
     beforeRouteUpdate(to, from, next){
-
       this.outerVisible=false
-      axios.get(`https://gorest.co.in/public-api/posts?_format=json&access-token=Y1A3q9Ee-dMhjxzsdco7qrr-W-6VPp4bpidT&id=${to.params.id}`)
-      .then(response =>
-            {              
-              if(response.data){      
-                this.post=response.data.result[0]
-              } 
-            }
-      );
+      this.loadPost(to.params.id)
     }
 
   }
