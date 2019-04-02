@@ -9,6 +9,11 @@
   <div class="row">
       <BlogListItem v-for="item in listItems" :item="item"/>
   </div>
+  <!--<div style="display:flex;flex-wrap:wrap;">
+    <div v-for="(item, index) in pages" :key="'idx'+index" style="display:block;width:35px;height:35px; text-align:center;padding:5px; border:1px solid blue;margin:2px">
+      <router-link :to="`/posts-${index+1}`" class="btn btn-link" style="padding: 5px">{{index+1}}</router-link>
+    </div>  
+  </div>-->
  
 </section>
 
@@ -17,7 +22,8 @@
 
 <script>
 import BlogListItem from "../components/blog-list-item"
-import axios from 'axios'
+import {mapActions, mapState, mapGetters} from 'vuex'
+
 export default {
   name: 'Home-page',
   props: {
@@ -26,27 +32,38 @@ export default {
 
 data(){
   return {
-    listItems:[]
+    totalCount:0,
+    pageCount:0,
+    currentPage:1,
+    perPage:20,
+    //listItems:[]
   }
 },
 components:{
   BlogListItem
   },
 
-created() {
-    //https://gorest.co.in/public-api/posts?_format=json&access-token=Y1A3q9Ee-dMhjxzsdco7qrr-W-6VPp4bpidT
-
-axios
-  .get('https://gorest.co.in/public-api/posts?_format=json&access-token=Y1A3q9Ee-dMhjxzsdco7qrr-W-6VPp4bpidT')
-  .then(response =>
-        {
-          if(response.data){
-            this.listItems=response.data.result
-          } 
-        }
-   );
-
+  /*beforeRouteUpdate(to, from, next){
+   console.log(to,to.path.replase(`/posts-`,""))
+  },*/
+  beforeMount() {   
+     this.getPosts({params:{currentPage:1}})
   },
+
+  computed:{
+    listItems(){
+      return this.$store.state.posts.pagePosts
+    },
+    pages(){
+        return new Array(this.pageCount)
+    }
+  },
+
+  methods:{
+      ...mapActions('posts',{
+        getPosts:'INIT_POSTS_LIST'
+      })
+  }
 }
 
 

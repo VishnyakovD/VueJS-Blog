@@ -7,37 +7,42 @@
 
 <script>
 import Vue from 'vue'
-import axios from 'axios'
+import {mapActions, mapState, mapGetters} from 'vuex'
+
   export default {
     data() {
       return {
         outerVisible: true, 
-        post:{}
+        //post:{}
       }
     },
 
     methods:{
-        goBack() {
+      ...mapActions('posts',{
+        getPost:'INIT_POST'
+      }),
+
+      goBack() {
         this.outerVisible=false
         window.history.length > 1
           ? this.$router.go(-1)
-          : this.$router.push('/')
+          : this.$router.push('/posts')
       },
+
       loadPost(id){
-        axios.get(`https://gorest.co.in/public-api/posts?_format=json&access-token=Y1A3q9Ee-dMhjxzsdco7qrr-W-6VPp4bpidT&id=${id}`)
-      .then(response =>
-            {              
-              if(response.data){      
-                this.post=response.data.result[0]               
-              } 
-            }
-      )
+        this.getPost({params:{id:id}})
       }
     },
 
-     created(){
-      this.loadPost(this.$route.params.id)
+  computed: {
+    post(){
+      return this.$store.state.posts.post
     },
+  },
+
+  beforeMount() {   
+     this.loadPost(this.$route.params.id)
+  },
     beforeRouteUpdate(to, from, next){
       this.outerVisible=false
       this.loadPost(to.params.id)

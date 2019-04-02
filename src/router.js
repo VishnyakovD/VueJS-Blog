@@ -12,14 +12,13 @@ export default new Router({
     {
       path: '/posts',
       name: 'posts',
-      component: ()=>import("./views/home-page.vue") ,
+      //alias: '/posts-*',
+      component: ()=>import("./views/home-page.vue"),
       children:[
         {
           path:':id',
           component:()=>import("./views/post-page.vue") 
       }
-
-
       ],
     },
     {
